@@ -12,3 +12,11 @@ For now, the script takes input for front page URL; once a front page (i.e. worl
 
 Update "flagArticleTriggers.csv" to adjust which article headlines are flagged from the main page.
 Update "wordsInArticle.csv" to adjust the words counted from each article
+
+——————————————————————————————————————————————————————
+
+NOTE the requirements.txt file for necessary downloads.
+
+If you have never run Python webscraping scripts, running "pip3 install pandas lxml beautifulsoup4 requests" in a bash terminal window first should have you covered.
+
+Terminal must be navigated to the same folder as the .py file and .csv files.
