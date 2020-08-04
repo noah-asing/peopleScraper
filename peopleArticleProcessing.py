@@ -8,7 +8,7 @@ from datetime import datetime
 '''
 peopleArticleProcessing.py
 Author:         Noah Asing
-Last updated:   July 27, 2020
+Last updated:   Aug 3, 2020
 '''
 
 class peopleArticleProcessing():
@@ -39,6 +39,7 @@ class peopleArticleProcessing():
         self.frontPageURL = frontPageURL
         self.flaggedLinks = []
         self.flaggedHeadlines = []
+        self.mainPeopleDomain = ['http://www.people.com.cn/', 'www.people.com.cn', 'http://people.com.cn', 'people.com.cn']
 
     def getArticles(self):
 
@@ -53,9 +54,12 @@ class peopleArticleProcessing():
         boring = None                                                   # bool 'boring' will prompt a message if there are no unscreened, relevant articles
         for link in soup.findAll('a'):                                  # loops through anchor tags
             articleURL = str(link.get('href'))                          # extracts URL from hyperlinks and converts to str
-            if '/' == articleURL[0] and '/n1/' in articleURL:           # filters for articles
-                articleURL = 'http://usa.people.com.cn' + articleURL    # the news source truncates href vals to post-domain info; this line adds the domain back
-                if articleURL in self.screened['articleHistory'].values:       # if article has been screened before, move to next iteration
+            domainBool = self.frontPageURL in self.mainPeopleDomain and '/n1/' in articleURL  # filters for articles on main people domain
+            subdomainBool = '/' == articleURL[0] and '/n1/' in articleURL       # filters for articles on people subdomains (usa.people, world.people)
+            if domainBool or subdomainBool:
+                if domainBool == False:
+                    articleURL = self.frontPageURL + articleURL                 # the subdomains news source truncates href vals to post-domain info; this line adds the domain back
+                if articleURL in self.screened['articleHistory'].values:        # if article has been screened before, move to next iteration
                     continue
                 else:
                     boring = 'not boring!'
@@ -65,10 +69,10 @@ class peopleArticleProcessing():
                             self.flaggedLinks += [articleURL]               # adds article link to list of articles for analysis
                             self.flaggedHeadlines += [link.get_text()]      # adds article headline to list of articles for analysis
         if boring == None:
-            print ('No new pertinent articles  ¯\_(ツ)_/¯')             # message prevents user confusion if the program does not generate new CSVs
+            print ('No new pertinent articles  ¯\_(ツ)_/¯')                 # message prevents user confusion if the program does not generate new CSVs
             exit()
 
-        self.screened.to_csv('./screenedLinks.csv', index=False)        # exports screened article DF to csv
+        self.screened.to_csv('./screenedLinks.csv', index=False)            # exports screened article DF to csv
 
         return self.flaggedLinks
 
@@ -92,7 +96,7 @@ class peopleArticleProcessing():
 
             soup = BeautifulSoup(rawContent, 'lxml')        # parses article data with lxml
 
-            articleContent = soup.find_all('p', {'style': 'text-indent: 2em;'})  # extracts paragraph tags
+            articleContent = soup.find_all('p')             # extracts paragraph tags
 
             fullText = ''
             for el in articleContent:
