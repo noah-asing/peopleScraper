@@ -13,7 +13,7 @@ For now, the script takes input for front page URL; once a front page (i.e. worl
 Update "flagArticleTriggers.csv" to adjust which article headlines are flagged from the main page.
 Update "wordsInArticle.csv" to adjust the words counted from each article
 
-——————————————————————————————————————————————————————
+———————————————————————————————————————————————
 
 NOTE the requirements.txt file for necessary downloads.
 
