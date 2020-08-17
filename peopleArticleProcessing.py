@@ -17,6 +17,7 @@ Last updated:   Aug 16, 2020
 flagCSV = 'flagArticleTriggers_english.csv'
 articleWordsCSV = 'wordsInArticles_english.csv'
 screenedLinksCSV = 'screenedLinks.csv'
+inputURL = 'http://en.people.cn/'
 
 ##########################################
 
@@ -178,9 +179,6 @@ class PeopleArticleProcessing():
 
 
 if __name__ == '__main__':
-    inputURL = input(
-        'Input a People (China) publication main page URL, i.e. http://usa.people.com.cn/ \n')
-
     yoohoo = PeopleArticleProcessing(
         flagCSV, articleWordsCSV, screenedLinksCSV, inputURL)
     yoohoo.processArticles()
