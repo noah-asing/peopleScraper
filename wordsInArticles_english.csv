@@ -12,8 +12,8 @@ threat_antagonist,antagonist
 opposition_challenger,disputant
 opposition_challenger,competitor
 opposition_challenger,challenger
-partner_ally_friend_supporter, ally
-partner_ally_friend_supporter, friend
+partner_ally_friend_supporter,ally
+partner_ally_friend_supporter,friend
 partner_ally_friend_supporter,supporter
 partner_ally_friend_supporter,collaborator
 partner_ally_friend_supporter,colleague
