@@ -22,7 +22,7 @@ urlStem = 'http://en.people.cn/review/' # Program fills in date number and the .
 
 # Creates datetime objects for the endpoints of the review dates to be scraped
 # Enter start and end date with format year, month, day
-startDay = datetime(2020, 8, 1)
+startDay = datetime(2020, 7, 15)
 endDay = datetime(2020, 8, 5)
 
 ##########################################
@@ -43,7 +43,7 @@ countCSVfull = dirname(abspath(__file__)) + '/' + countCSV
 
 # Creates a blank dataframe table for the scraped links
 # Column headers for the review date that the article was pulled from, article headline and link.
-d = {'reviewDate': [], 'Headlines': [], 'scrapedLinks': []}
+d = {'articleDate': [], 'reviewDate': [], 'Headlines': [], 'scrapedLinks': []}
 scrapedTotalDF = pd.DataFrame(d)
 
 # Creates dataframe with first column as the words to analyze.
@@ -55,7 +55,7 @@ while day != startDay:
     day += timedelta(days=-1)       # Increments datetime object 1 day towards the past
     date = day.strftime('%Y%m%d')   # Saves date in string form with YYYYmmdd (Aug 5, 2020 --> 20200805)
 
-    print('Running', urlStem+date+'.html ...')  # Prints the URL about to run to console
+    print('Running... ', urlStem+date+'.html')  # Prints the URL about to run to console
 
     obj = PeopleArticleProcessing(
         flagArticleCSV, countCSV, screenedLinksCSV, urlStem+date+'.html')
@@ -72,10 +72,12 @@ while day != startDay:
     # Following block generates a dataframe with the same columns as scrapedTotalDF and appends it to the bottom of scrapedTotalDF
     m = []
     for el in obj.flaggedLinks:
-        m += [day.strftime('%b %d, %Y')]
-    scrapedFragment = {'reviewDate': m, 'Headlines': obj.flaggedHeadlines, 'scrapedLinks': obj.flaggedLinks}
+        m += [day.strftime('%m/%d/%Y')]
+    scrapedFragment = {'articleDate': obj.articleDates, 'reviewDate': m, 'Headlines': obj.flaggedHeadlines, 'scrapedLinks': obj.flaggedLinks}
     scrapedFragmentDF = pd.DataFrame(scrapedFragment)
     scrapedTotalDF = scrapedTotalDF.append(scrapedFragmentDF, ignore_index=True)
+
+scrapedTotalDF = scrapedTotalDF.set_index('articleDate').sort_index(ascending=False).reset_index()
 
 # Exports scrapedTotalDF to CSV named with datetime of run.
 scrapedCSVname = 'linksScraped ' + \

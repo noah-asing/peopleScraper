@@ -56,6 +56,7 @@ class PeopleArticleProcessing():
 
         self.frontPageURL = frontPageURL.strip()
         self.domain = self.frontPageURL.split('.cn/', 1)[0] + '.cn'
+        self.articleDates = []
         self.flaggedLinks = []
         self.flaggedHeadlines = []
 
@@ -112,6 +113,13 @@ class PeopleArticleProcessing():
 
                         # Adds article headline to list of articles for analysis
                         self.flaggedHeadlines += [link.get_text().strip()]
+
+                        published = articleURL.split('/n',1)[1].split('/')[1:3]
+                        publishedYear = int(published[0])
+                        publishedMonth = int(published[1][:2])
+                        publishedDay = int(published[1][-2:])
+                        publishedDT = datetime(publishedYear, publishedMonth, publishedDay)
+                        self.articleDates += [publishedDT.strftime('%m/%d/%Y')]
 
                         break
 
