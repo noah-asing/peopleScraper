@@ -37,12 +37,14 @@ class PeopleArticleProcessing():
 
         # Retrieves path to the python file and makes absolute path strings to CSV's
         self.dirName = path.dirname(path.abspath(__file__)) + '/'
+
         flagCSV = self.dirName + flagCSV
         articleWordsCSV = self.dirName + articleWordsCSV
         screenedLinksCSV = self.dirName + screenedLinksCSV
 
         # Intakes CSV data to DataFrame table of words for identifying relevant articles
         self.articleTriggers = pd.read_csv(flagCSV)
+
         # Intakes CSV data to DataFrame table of words to count/analyze within articles
         self.wordsToCount = pd.read_csv(articleWordsCSV)
 
@@ -51,6 +53,7 @@ class PeopleArticleProcessing():
             self.screened = pd.read_csv(screenedLinksCSV)
         except:
             self.screened = pd.DataFrame({'articleHistory': []})
+
         self.frontPageURL = frontPageURL.strip()
         self.domain = self.frontPageURL.split('.cn/', 1)[0] + '.cn'
         self.flaggedLinks = []
@@ -155,7 +158,16 @@ class PeopleArticleProcessing():
 
             # Adds column to word frequency DF table named with the URL with number of occurrences as values
             self.freqDF[link] = wordCount
+            
+        # Excludes occurrences of 'unfriendly' from count of 'friend'
+        try:
+            self.freqDF = self.freqDF.set_index('words_phrases')
+            self.freqDF.loc['friend'] = self.freqDF.loc['friend'] - self.freqDF.loc['unfriendly']
+        except:
+            pass
 
+        self.freqDF = self.freqDF.reset_index()
+        
         return self.freqDF
 
     def exportToCSV(self):
@@ -179,6 +191,7 @@ class PeopleArticleProcessing():
 
 
 if __name__ == '__main__':
+    
     yoohoo = PeopleArticleProcessing(
         flagCSV, articleWordsCSV, screenedLinksCSV, inputURL)
     yoohoo.processArticles()
