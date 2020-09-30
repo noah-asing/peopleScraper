@@ -90,4 +90,4 @@ freqCSVname = 'wordFrequencies ' + \
 totalFreqDF.to_csv(obj.dirName + freqCSVname, index=False, encoding='utf-8-sig')
 
 # Logs the time taken to run in console
-print('Job took ', perf_counter(), ' seconds')
+print('Job took', format(perf_counter(),',.1f'), 'seconds')
